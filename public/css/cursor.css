@@ -1,0 +1,33 @@
+body {
+    cursor: none;
+}
+
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 999999;
+}
+
+.cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    transition: transform 0.2s ease-out;
+}
+
+.cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    transform: translate(-16px, -16px);
+    transition: all 0.3s ease-out;
+}
+
+body:hover .cursor-outline.hover {
+    transform: translate(-16px, -16px) scale(1.5);
+    background-color: rgba(99, 102, 241, 0.2);
+}
