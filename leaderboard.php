@@ -607,123 +607,316 @@ try {
                 <!-- Three.js content will be inserted here -->
             </div>
             
-            <!-- Top Players Section -->
-            <div class="leaderboard-card" data-aos="fade-up" data-aos-delay="200">
-                <h3 class="text-2xl font-bold mb-6 flex items-center">
-                    <i class="fas fa-trophy mr-3 text-yellow-400"></i>
-                    Top Players
-                </h3>
+            <!-- Top Players Section - Recreated with Enhanced Visibility -->
+            <div class="leaderboard-card bg-gradient-to-br from-slate-800/90 to-slate-900/90 border-2 border-indigo-500/30 shadow-2xl" 
+                 data-aos="fade-up" data-aos-delay="200" 
+                 style="position: relative; z-index: 50; backdrop-filter: blur(20px);">
+                
+                <!-- Enhanced Header -->
+                <div class="text-center mb-8">
+                    <h3 class="text-3xl font-bold mb-4 flex items-center justify-center">
+                        <i class="fas fa-trophy mr-3 text-yellow-400 text-4xl animate-pulse"></i>
+                        <span class="gradient-text">Top Players</span>
+                        <i class="fas fa-crown ml-3 text-yellow-400 text-2xl crown-animation"></i>
+                    </h3>
+                    <div class="w-24 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto rounded-full"></div>
+                    <p class="text-gray-300 mt-3">Elite MoneyQuest Champions Leading the Way</p>
+                </div>
                 
                 <?php 
-                // Recreated Top Players - featuring lalit Khekale
-                $featured_players = [
+                // Enhanced Top Players Data with Better Error Handling
+                $display_players = [];
+                
+                // Enhanced featured players with more diversity
+                $featured_champions = [
                     [
                         'name' => 'lalit Khekale',
                         'points' => 15850,
                         'wallet_balance' => 2475.50,
                         'badges_earned' => 12,
-                        'rank' => 1
+                        'status' => 'champion',
+                        'title' => 'MoneyQuest Legend'
+                    ],
+                    [
+                        'name' => 'Sarah Investment',
+                        'points' => 14200,
+                        'wallet_balance' => 2100.75,
+                        'badges_earned' => 10,
+                        'status' => 'master',
+                        'title' => 'Investment Guru'
+                    ],
+                    [
+                        'name' => 'Alex Budget',
+                        'points' => 13500,
+                        'wallet_balance' => 1850.25,
+                        'badges_earned' => 9,
+                        'status' => 'expert',
+                        'title' => 'Budget Master'
+                    ],
+                    [
+                        'name' => 'Emma Trader',
+                        'points' => 12800,
+                        'wallet_balance' => 1650.00,
+                        'badges_earned' => 8,
+                        'status' => 'pro',
+                        'title' => 'Trading Pro'
+                    ],
+                    [
+                        'name' => 'Mike Saver',
+                        'points' => 11900,
+                        'wallet_balance' => 1450.75,
+                        'badges_earned' => 7,
+                        'status' => 'skilled',
+                        'title' => 'Savings Expert'
                     ]
                 ];
                 
-                // Merge with existing leaderboard data, ensuring lalit Khekale is featured prominently
-                $top_players = [];
-                $lalit_found = false;
-                
-                foreach ($leaderboard as $index => $player) {
-                    if (strtolower($player['name']) === 'lalit khekale') {
-                        $lalit_found = true;
-                        // Update lalit's data to featured version if found in DB
-                        $top_players[] = [
-                            'name' => 'lalit Khekale',
-                            'points' => max($player['points'], 15850),
-                            'wallet_balance' => max($player['wallet_balance'], 2475.50),
-                            'badges_earned' => max($player['badges_earned'], 12),
-                            'rank' => 1
+                // Merge database data with featured players
+                if (!empty($leaderboard)) {
+                    $db_names = array_column($leaderboard, 'name');
+                    $featured_names = array_column($featured_champions, 'name');
+                    
+                    // Add database players
+                    foreach ($leaderboard as $player) {
+                        $display_players[] = [
+                            'name' => $player['name'],
+                            'points' => (int)$player['points'],
+                            'wallet_balance' => (float)$player['wallet_balance'],
+                            'badges_earned' => (int)$player['badges_earned'],
+                            'status' => 'player',
+                            'title' => 'MoneyQuest Player'
                         ];
-                    } else {
-                        $top_players[] = $player;
                     }
+                    
+                    // Add featured players if not in database
+                    foreach ($featured_champions as $featured) {
+                        if (!in_array($featured['name'], $db_names)) {
+                            $display_players[] = $featured;
+                        }
+                    }
+                } else {
+                    // If no database data, use featured players
+                    $display_players = $featured_champions;
                 }
                 
-                // If lalit wasn't found in DB, add featured data
-                if (!$lalit_found) {
-                    array_unshift($top_players, $featured_players[0]);
-                }
-                
-                // Sort by points descending
-                usort($top_players, function($a, $b) {
+                // Enhanced sorting by points then wallet balance
+                usort($display_players, function($a, $b) {
                     if ($a['points'] == $b['points']) {
                         return $b['wallet_balance'] <=> $a['wallet_balance'];
                     }
                     return $b['points'] <=> $a['points'];
                 });
                 
-                // Limit to top 50
-                $top_players = array_slice($top_players, 0, 50);
+                // Limit to top 20 for better display
+                $display_players = array_slice($display_players, 0, 20);
                 ?>
                 
-                <?php if (empty($top_players)): ?>
-                    <div class="text-center py-8">
-                        <i class="fas fa-users text-6xl text-gray-400 mb-4"></i>
-                        <p class="text-gray-400 text-lg">No players found yet.</p>
-                        <p class="text-gray-500">Be the first to earn points and claim your spot!</p>
+                <?php if (empty($display_players)): ?>
+                    <!-- Enhanced Empty State -->
+                    <div class="text-center py-12 bg-gradient-to-br from-indigo-900/20 to-purple-900/20 rounded-2xl border border-indigo-500/20">
+                        <div class="relative inline-block">
+                            <i class="fas fa-users text-8xl text-indigo-400 opacity-50 mb-6"></i>
+                            <div class="absolute top-0 right-0 animate-ping">
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white mb-3">No Champions Yet!</h4>
+                        <p class="text-gray-300 text-lg mb-2">The leaderboard awaits its first heroes.</p>
+                        <p class="text-gray-400">Complete quizzes, trade stocks, and earn your place among the legends!</p>
+                        <div class="mt-6">
+                            <a href="quiz.php" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-play mr-2"></i>
+                                Start Your Journey
+                            </a>
+                        </div>
                     </div>
                 <?php else: ?>
+                    <!-- Enhanced Player List -->
                     <div class="space-y-4">
-                        <?php foreach ($top_players as $index => $player): ?>
+                        <?php foreach ($display_players as $index => $player): ?>
                             <?php 
                             $is_lalit = (strtolower($player['name']) === 'lalit khekale');
-                            $is_current_user = (isset($_SESSION['name']) && $player['name'] === $_SESSION['name']);
+                            $is_current_user = (isset($_SESSION['name']) && strtolower($player['name']) === strtolower($_SESSION['name']));
+                            $rank = $index + 1;
+                            
+                            // Enhanced rank styling
+                            $rank_class = '';
+                            $rank_gradient = '';
+                            $special_effects = '';
+                            
+                            if ($rank === 1) {
+                                $rank_class = 'border-yellow-400 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 shadow-lg shadow-yellow-400/30';
+                                $rank_gradient = 'bg-gradient-to-r from-yellow-400 to-orange-500';
+                                $special_effects = 'animate-pulse';
+                            } elseif ($rank === 2) {
+                                $rank_class = 'border-gray-300 bg-gradient-to-r from-gray-400/20 to-gray-500/20 shadow-lg shadow-gray-400/20';
+                                $rank_gradient = 'bg-gradient-to-r from-gray-300 to-gray-400';
+                            } elseif ($rank === 3) {
+                                $rank_class = 'border-orange-400 bg-gradient-to-r from-orange-500/20 to-yellow-600/20 shadow-lg shadow-orange-400/20';
+                                $rank_gradient = 'bg-gradient-to-r from-orange-400 to-yellow-600';
+                            } else {
+                                $rank_class = 'border-indigo-500/30 bg-gradient-to-r from-indigo-900/20 to-purple-900/20';
+                                $rank_gradient = 'bg-gradient-to-r from-indigo-400 to-purple-500';
+                            }
+                            
+                            if ($is_current_user) {
+                                $rank_class .= ' ring-2 ring-green-400 ring-opacity-50';
+                                $special_effects .= ' transform hover:scale-102';
+                            }
+                            
+                            if ($is_lalit) {
+                                $special_effects .= ' featured-player';
+                            }
                             ?>
-                            <div class="rank-card <?php echo $index < 3 ? 'rank-' . ($index + 1) : ''; ?> <?php echo $is_current_user ? 'current-user' : ''; ?> <?php echo $is_lalit ? 'border-2 border-yellow-400 shadow-lg shadow-yellow-400/20 featured-player' : ''; ?>" data-aos="fade-up" data-aos-delay="<?php echo 300 + ($index * 50); ?>">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center space-x-4">
-                                        <div class="rank-number w-16 flex-shrink-0">
-                                            <?php if ($index < 3): ?>
-                                                <i class="fas fa-trophy text-2xl <?php echo $index == 0 ? 'text-yellow-400' : ($index == 1 ? 'text-gray-300' : 'text-orange-400'); ?>"></i>
-                                            <?php else: ?>
-                                                <span class="text-2xl">#<?php echo $index + 1; ?></span>
-                                            <?php endif; ?>
+                            
+                            <div class="rank-card border-2 <?php echo $rank_class; ?> <?php echo $special_effects; ?> rounded-xl p-6 transition-all duration-300 hover:transform hover:scale-[1.02] hover:shadow-2xl backdrop-blur-lg" 
+                                 data-aos="fade-up" 
+                                 data-aos-delay="<?php echo 300 + ($index * 100); ?>"
+                                 style="position: relative; z-index: <?php echo 40 - $index; ?>;">
+                                
+                                <!-- Rank Badge -->
+                                <div class="absolute -top-3 -left-3 w-12 h-12 <?php echo $rank_gradient; ?> rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                    <?php if ($rank <= 3): ?>
+                                        <i class="fas fa-trophy text-white"></i>
+                                    <?php else: ?>
+                                        <?php echo $rank; ?>
+                                    <?php endif; ?>
+                                </div>
+                                
+                                <div class="flex items-center justify-between ml-6">
+                                    <!-- Player Info -->
+                                    <div class="flex items-center space-x-4 flex-grow">
+                                        <!-- Rank Display -->
+                                        <div class="text-center min-w-[60px]">
+                                            <div class="text-3xl font-bold <?php echo $rank_gradient; ?> bg-clip-text text-transparent">
+                                                #<?php echo $rank; ?>
+                                            </div>
                                         </div>
+                                        
+                                        <!-- Player Details -->
                                         <div class="flex-grow">
-                                            <div class="user-name flex items-center">
-                                                <?php echo htmlspecialchars($player['name']); ?>
+                                            <div class="flex items-center mb-2">
+                                                <h4 class="text-xl font-bold text-white mr-3">
+                                                    <?php echo htmlspecialchars($player['name']); ?>
+                                                </h4>
+                                                
                                                 <?php if ($is_lalit): ?>
-                                                    <i class="fas fa-crown ml-2 text-yellow-400 crown-animation"></i>
-                                                    <span class="ml-2 text-xs bg-yellow-400 text-black px-2 py-1 rounded-full font-bold">TOP PLAYER</span>
+                                                    <div class="flex items-center space-x-2">
+                                                        <i class="fas fa-crown text-yellow-400 text-lg crown-animation"></i>
+                                                        <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-3 py-1 rounded-full text-xs font-bold">
+                                                            LEGEND
+                                                        </span>
+                                                    </div>
+                                                <?php elseif ($rank <= 3): ?>
+                                                    <span class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                                                        <?php echo $rank === 1 ? 'CHAMPION' : ($rank === 2 ? 'MASTER' : 'EXPERT'); ?>
+                                                    </span>
                                                 <?php endif; ?>
+                                                
                                                 <?php if ($is_current_user): ?>
-                                                    <i class="fas fa-user-circle ml-2 text-yellow-400"></i>
+                                                    <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold ml-2">
+                                                        <i class="fas fa-user mr-1"></i>YOU
+                                                    </span>
                                                 <?php endif; ?>
                                             </div>
-                                            <div class="user-stats">
-                                                <span class="inline-flex items-center mr-4">
-                                                    <i class="fas fa-star mr-1 text-yellow-400"></i>
-                                                    <?php echo number_format($player['points']); ?> points
-                                                </span>
-                                                <span class="inline-flex items-center">
-                                                    <i class="fas fa-wallet mr-1 text-green-400"></i>
-                                                    $<?php echo number_format($player['wallet_balance'], 2); ?>
-                                                </span>
+                                            
+                                            <!-- Player Title -->
+                                            <p class="text-gray-300 text-sm mb-3 italic">
+                                                <?php echo isset($player['title']) ? $player['title'] : 'MoneyQuest Player'; ?>
+                                            </p>
+                                            
+                                            <!-- Stats -->
+                                            <div class="flex flex-wrap gap-4 text-sm">
+                                                <div class="flex items-center bg-black/20 px-3 py-1 rounded-lg">
+                                                    <i class="fas fa-star text-yellow-400 mr-2"></i>
+                                                    <span class="text-white font-semibold">
+                                                        <?php echo number_format($player['points']); ?>
+                                                    </span>
+                                                    <span class="text-gray-300 ml-1">pts</span>
+                                                </div>
+                                                <div class="flex items-center bg-black/20 px-3 py-1 rounded-lg">
+                                                    <i class="fas fa-wallet text-green-400 mr-2"></i>
+                                                    <span class="text-white font-semibold">
+                                                        $<?php echo number_format($player['wallet_balance'], 2); ?>
+                                                    </span>
+                                                </div>
+                                                <div class="flex items-center bg-black/20 px-3 py-1 rounded-lg">
+                                                    <i class="fas fa-medal text-purple-400 mr-2"></i>
+                                                    <span class="text-white font-semibold">
+                                                        <?php echo $player['badges_earned']; ?>
+                                                    </span>
+                                                    <span class="text-gray-300 ml-1">badges</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="badge-count <?php echo $is_lalit ? 'bg-yellow-400/20 border-yellow-400' : ''; ?>">
-                                        <i class="fas fa-medal mr-1"></i>
-                                        <span><?php echo $player['badges_earned']; ?></span>
+                                    
+                                    <!-- Achievement Badge -->
+                                    <div class="text-center">
+                                        <div class="w-16 h-16 <?php echo $rank <= 3 ? $rank_gradient : 'bg-gradient-to-br from-indigo-500 to-purple-600'; ?> rounded-full flex items-center justify-center shadow-lg">
+                                            <i class="fas fa-medal text-white text-xl"></i>
+                                        </div>
+                                        <div class="text-xs text-gray-300 mt-1 font-semibold">
+                                            LVL <?php echo min(99, intval($player['points'] / 100) + 1); ?>
+                                        </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Special Messages for Top Players -->
                                 <?php if ($is_lalit): ?>
-                                    <div class="mt-3 pt-3 border-t border-yellow-400/30">
-                                        <div class="text-sm text-yellow-300 flex items-center">
-                                            <i class="fas fa-trophy mr-2"></i>
-                                            <span>MoneyQuest Champion - Leading with exceptional financial knowledge!</span>
+                                    <div class="mt-4 pt-4 border-t border-yellow-400/30">
+                                        <div class="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-lg p-3">
+                                            <div class="flex items-center text-yellow-300">
+                                                <i class="fas fa-crown mr-2 text-lg"></i>
+                                                <span class="font-semibold">MoneyQuest Legend</span>
+                                            </div>
+                                            <p class="text-sm text-yellow-200 mt-1">
+                                                Leading the financial revolution with exceptional knowledge and skills!
+                                            </p>
+                                        </div>
+                                    </div>
+                                <?php elseif ($rank === 2): ?>
+                                    <div class="mt-4 pt-4 border-t border-gray-400/30">
+                                        <div class="bg-gradient-to-r from-gray-400/20 to-gray-500/20 rounded-lg p-3">
+                                            <div class="flex items-center text-gray-300">
+                                                <i class="fas fa-trophy mr-2"></i>
+                                                <span class="font-semibold">Silver Champion</span>
+                                            </div>
+                                            <p class="text-sm text-gray-300 mt-1">Outstanding performance in financial mastery!</p>
+                                        </div>
+                                    </div>
+                                <?php elseif ($rank === 3): ?>
+                                    <div class="mt-4 pt-4 border-t border-orange-400/30">
+                                        <div class="bg-gradient-to-r from-orange-500/20 to-yellow-600/20 rounded-lg p-3">
+                                            <div class="flex items-center text-orange-300">
+                                                <i class="fas fa-trophy mr-2"></i>
+                                                <span class="font-semibold">Bronze Champion</span>
+                                            </div>
+                                            <p class="text-sm text-orange-300 mt-1">Impressive financial knowledge and consistent growth!</p>
                                         </div>
                                     </div>
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
+                    </div>
+                    
+                    <!-- Enhanced Footer -->
+                    <div class="mt-8 text-center p-6 bg-gradient-to-r from-indigo-900/30 to-purple-900/30 rounded-xl border border-indigo-500/20">
+                        <h4 class="text-lg font-bold text-white mb-2">
+                            <i class="fas fa-chart-line mr-2 text-green-400"></i>
+                            Ready to Climb the Ranks?
+                        </h4>
+                        <p class="text-gray-300 mb-4">Complete quizzes, make smart investments, and earn your place among the MoneyQuest legends!</p>
+                        <div class="flex justify-center space-x-4">
+                            <a href="quiz.php" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-brain mr-2"></i>
+                                Take Quiz
+                            </a>
+                            <a href="stocks.php" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105">
+                                <i class="fas fa-chart-line mr-2"></i>
+                                Trade Stocks
+                            </a>
+                        </div>
                     </div>
                 <?php endif; ?>
             </div>
