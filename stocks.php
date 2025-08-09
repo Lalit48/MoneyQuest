@@ -124,6 +124,9 @@ try {
     <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
@@ -831,27 +834,41 @@ try {
                         <input type="hidden" name="symbol" id="tradeSymbol">
                         <input type="hidden" name="price" id="tradePrice">
                         
-                        <div class="mb-3">
-                            <label class="form-label">Stock Symbol</label>
-                            <input type="text" class="form-control" id="tradeSymbolDisplay" readonly>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Current Price</label>
-                            <input type="text" class="form-control" id="tradePriceDisplay" readonly>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
-                            <div class="range-slider mt-2">
-                                <input type="range" class="form-range" id="quantity-range" min="1" max="100" value="1">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="mb-3 mb-md-0">
+                                    <label class="form-label">Stock Symbol</label>
+                                    <input type="text" class="form-control" id="tradeSymbolDisplay" readonly>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Total Cost</label>
-                            <input type="text" class="form-control" id="totalCost" readonly>
+                            <div class="col-md-6">
+                                <div class="mb-3 mb-md-0">
+                                    <label class="form-label">Current Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="text" class="form-control" id="tradePriceDisplay" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8 mt-3">
+                                <label for="quantity" class="form-label">Quantity</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+                                    <span class="input-group-text">shares</span>
+                                </div>
+                                <div class="range-slider mt-2">
+                                    <input type="range" class="form-range" id="quantity-range" min="1" max="100" value="1">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label class="form-label">Total Cost</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="text" class="form-control" id="totalCost" readonly>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -1280,14 +1297,14 @@ try {
             $('#tradeSymbol').val(symbol);
             $('#tradePrice').val(price);
             $('#tradeSymbolDisplay').val(symbol);
-            $('#tradePriceDisplay').val('$' + price.toFixed(2));
+            $('#tradePriceDisplay').val(price.toFixed(2));
             // Keep static modal title "Trade Stock"
             $('#tradeSubmitBtn').removeClass('btn-primary btn-success btn-danger').addClass(action === 'buy' ? 'btn-success' : 'btn-danger');
             
             // Reset quantity
             $('#quantity').val(1);
             $('#quantity-range').val(1);
-            $('#totalCost').val('$' + price.toFixed(2));
+            $('#totalCost').val(price.toFixed(2));
             
             var tradeModalEl = document.getElementById('tradeModal');
             var tradeModal = new bootstrap.Modal(tradeModalEl);
@@ -1300,7 +1317,7 @@ try {
                 const quantity = parseInt($(this).val()) || 0;
                 const price = parseFloat($('#tradePrice').val()) || 0;
                 const total = quantity * price;
-                $('#totalCost').val('$' + total.toFixed(2));
+                $('#totalCost').val(total.toFixed(2));
                 $('#quantity-range').val(quantity);
             });
             
@@ -1311,7 +1328,7 @@ try {
                 
                 const price = parseFloat($('#tradePrice').val()) || 0;
                 const total = quantity * price;
-                $('#totalCost').val('$' + total.toFixed(2));
+                $('#totalCost').val(total.toFixed(2));
             });
             
             // Initialize stock search functionality
