@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$user_points = $_SESSION['points'];
+$user_points = isset($_SESSION['points']) ? (int)$_SESSION['points'] : 0;
 $name = isset($_SESSION['name']) ? $_SESSION['name'] : 'User';
 $error = '';
 
@@ -22,6 +22,16 @@ try {
 } catch (Exception $e) {
     $error = 'Failed to load achievements: ' . $e->getMessage();
     $achievements = [];
+}
+
+// Fallback default achievements if none available
+if (empty($achievements)) {
+    $achievements = [
+        ['id' => 1, 'title' => 'First Quiz', 'description' => 'Complete your first quiz', 'points_required' => 10, 'icon' => 'fas fa-clipboard-check'],
+        ['id' => 2, 'title' => 'Stock Trader', 'description' => 'Make your first stock purchase', 'points_required' => 25, 'icon' => 'fas fa-chart-line'],
+        ['id' => 3, 'title' => 'Quiz Master', 'description' => 'Complete 5 quizzes', 'points_required' => 50, 'icon' => 'fas fa-trophy'],
+        ['id' => 4, 'title' => 'All-Rounder', 'description' => 'Unlock all starter achievements', 'points_required' => 100, 'icon' => 'fas fa-medal'],
+    ];
 }
 ?>
 
