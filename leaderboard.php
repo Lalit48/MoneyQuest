@@ -290,7 +290,7 @@ try {
             min-height: 100vh;
             background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
         
         .leaderboard-section::before {
@@ -342,6 +342,10 @@ try {
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            z-index: auto !important;
         }
         
         .rank-card::before {
@@ -610,7 +614,7 @@ try {
             <!-- Top Players Section - Recreated with Enhanced Visibility -->
             <div class="leaderboard-card bg-gradient-to-br from-slate-800/90 to-slate-900/90 border-2 border-indigo-500/30 shadow-2xl" 
                  data-aos="fade-up" data-aos-delay="200" 
-                 style="position: relative; z-index: 50; backdrop-filter: blur(20px);">
+                 style="position: relative; z-index: auto; backdrop-filter: blur(20px);">
                 
                 <!-- Enhanced Header -->
                 <div class="text-center mb-8">
@@ -732,7 +736,7 @@ try {
                     </div>
                 <?php else: ?>
                     <!-- Enhanced Player List -->
-                    <div class="space-y-4">
+                    <div class="space-y-4" style="position: relative; z-index: auto;">
                         <?php foreach ($display_players as $index => $player): ?>
                             <?php 
                             $is_lalit = (strtolower($player['name']) === 'lalit khekale');
@@ -769,13 +773,13 @@ try {
                             }
                             ?>
                             
-                            <div class="rank-card border-2 <?php echo $rank_class; ?> <?php echo $special_effects; ?> rounded-xl p-6 transition-all duration-300 hover:transform hover:scale-[1.02] hover:shadow-2xl backdrop-blur-lg" 
+                            <div class="rank-card border-2 <?php echo $rank_class; ?> <?php echo $special_effects; ?> rounded-xl p-6 transition-all duration-300 hover:transform hover:scale-[1.02] hover:shadow-2xl backdrop-blur-lg mb-4" 
                                  data-aos="fade-up" 
                                  data-aos-delay="<?php echo 300 + ($index * 100); ?>"
-                                 style="position: relative; z-index: <?php echo 40 - $index; ?>;">
+                                 style="position: relative; z-index: auto; display: block !important; visibility: visible !important; opacity: 1 !important;">
                                 
                                 <!-- Rank Badge -->
-                                <div class="absolute -top-3 -left-3 w-12 h-12 <?php echo $rank_gradient; ?> rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                <div class="absolute -top-3 -left-3 w-12 h-12 <?php echo $rank_gradient; ?> rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg z-10">
                                     <?php if ($rank <= 3): ?>
                                         <i class="fas fa-trophy text-white"></i>
                                     <?php else: ?>
@@ -1271,6 +1275,15 @@ try {
                     stagger: 0.1,
                     ease: 'power3.out',
                     delay: 0.5
+                });
+                
+                // Ensure all cards are visible after animation
+                gsap.to('.rank-card', {
+                    duration: 0.1,
+                    opacity: 1,
+                    display: 'block',
+                    visibility: 'visible',
+                    delay: 2
                 });
             }
         }
