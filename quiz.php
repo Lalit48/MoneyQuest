@@ -346,58 +346,368 @@ try {
             pointer-events: none;
         }
         
-        .quiz-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 2.5rem;
-            transition: all 0.3s ease;
+        .quiz-main-container {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 32px;
+            padding: 3rem;
             position: relative;
             overflow: hidden;
             margin-bottom: 2rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
         
-        .quiz-card::before {
+        .quiz-main-container::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gradient-primary);
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.8), transparent);
         }
         
-        .quiz-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary-color);
+        .quiz-main-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            pointer-events: none;
         }
         
         .quiz-selection-card {
-            background: rgba(15, 23, 42, 0.6);
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
             border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 24px;
+            padding: 2.5rem;
             position: relative;
             overflow: hidden;
-            height: 100%;
+            height: 280px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             text-align: center;
             cursor: pointer;
             backdrop-filter: blur(10px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.3),
+                0 10px 10px -5px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .quiz-selection-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .quiz-selection-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
+            transform: scaleX(0);
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
         
         .quiz-selection-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(99, 102, 241, 0.5);
-            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 
+                0 35px 60px -10px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(99, 102, 241, 0.3),
+                0 0 60px rgba(139, 92, 246, 0.2);
+            border-color: rgba(99, 102, 241, 0.6);
+        }
+        
+        .quiz-selection-card:hover::before {
+            opacity: 1;
+        }
+        
+        .quiz-selection-card:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .quiz-selection-card:hover .card-icon {
+            transform: scale(1.2) rotateY(180deg);
+        }
+        
+        .quiz-selection-card:hover .card-title {
+            color: #8b5cf6;
+        }
+        
+        .quiz-selection-card:hover .start-button {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            transform: scale(1.05);
+        }
+        
+        .card-icon {
+            font-size: 3.5rem;
+            color: #6366f1;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.3));
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f8fafc;
+            transition: all 0.4s ease;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-description {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+        
+        .start-button {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.8), rgba(139, 92, 246, 0.8));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        .quiz-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            animation: pulse-glow 2s infinite;
+        }
+        
+        .category-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 25px rgba(16, 185, 129, 0.7);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Responsive Design Enhancements */
+        @media (max-width: 768px) {
+            .quiz-main-container {
+                padding: 2rem;
+                border-radius: 24px;
+            }
+            
+            .quiz-selection-card {
+                height: 250px;
+                padding: 2rem;
+            }
+            
+            .card-icon {
+                font-size: 3rem;
+            }
+            
+            .card-title {
+                font-size: 1.25rem;
+            }
+            
+            .card-description {
+                font-size: 0.875rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .quiz-main-container {
+                padding: 1.5rem;
+            }
+            
+            .quiz-selection-card {
+                height: 220px;
+                padding: 1.5rem;
+            }
+            
+            .card-icon {
+                font-size: 2.5rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .quiz-badge, .category-badge {
+                font-size: 0.6rem;
+                padding: 0.3rem 0.6rem;
+            }
+        }
+        
+        /* Additional Visual Effects */
+        .quiz-selection-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quiz-selection-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(99, 102, 241, 0.1) 60deg, transparent 120deg);
+            opacity: 0;
+            animation: rotate 8s linear infinite;
+            transition: opacity 0.5s ease;
+        }
+        
+        .quiz-selection-card:hover::before {
+            opacity: 1;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Enhanced Glow Effects */
+        .quiz-selection-card:hover {
+            box-shadow: 
+                0 35px 60px -10px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(99, 102, 241, 0.3),
+                0 0 60px rgba(139, 92, 246, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Tooltip Styles */
+        .tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            color: #f8fafc;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Loading Animation */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top: 3px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Success Animation */
+        .success-checkmark {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 3;
+            stroke: #10b981;
+            stroke-miterlimit: 10;
+            margin: 0 auto;
+            box-shadow: inset 0px 0px 0px #10b981;
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+        
+        .success-checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 3;
+            stroke-miterlimit: 10;
+            stroke: #10b981;
+            fill: none;
+            animation: stroke .6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        
+        .success-checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke .3s cubic-bezier(0.65, 0, 0.45, 1) .8s forwards;
+        }
+        
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+        
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 30px #10b981;
+            }
         }
         
         .question-card {
@@ -704,33 +1014,78 @@ try {
             <?php endif; ?>
             
             <!-- Quiz Selection -->
-            <div class="quiz-card" data-aos="fade-up" data-aos-delay="100">
-                <h2 class="text-3xl font-bold mb-8 text-center">
-                    <i class="fas fa-list mr-3 text-indigo-400"></i>
-                    <span class="gradient-text">Select a Quiz</span>
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="quiz-main-container" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold mb-4">
+                        <i class="fas fa-brain mr-3 text-indigo-400 floating-element"></i>
+                        <span class="gradient-text">Select a Quiz</span>
+                    </h2>
+                    <div class="w-20 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 mx-auto rounded-full"></div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <?php foreach ($quizzes as $index => $quiz): ?>
-                        <div class="quiz-selection-card" onclick="loadQuiz(<?php echo $quiz['quiz_id']; ?>)" data-aos="fade-up" data-aos-delay="<?php echo 150 + ($index * 50); ?>">
+                        <div class="quiz-selection-card" onclick="loadQuiz(<?php echo $quiz['quiz_id']; ?>)" data-aos="zoom-in" data-aos-delay="<?php echo 200 + ($index * 100); ?>">
                             <?php if ($index < 2): ?>
                                 <span class="quiz-badge">NEW</span>
                             <?php endif; ?>
-                            <div class="text-4xl mb-4 text-indigo-400">
-                                <i class="fas fa-brain"></i>
-                            </div>
                             <span class="category-badge"><?php echo htmlspecialchars($quiz['category']); ?></span>
-                            <h3 class="text-xl font-bold mb-3"><?php echo htmlspecialchars($quiz['title']); ?></h3>
-                            <p class="text-gray-300 mb-4">Test your knowledge and earn rewards</p>
-                            <div class="bg-indigo-500/20 px-4 py-2 rounded-full text-sm font-medium text-indigo-300">
-                                <i class="fas fa-play mr-1"></i> Start Quiz
+                            
+                            <div class="flex flex-col items-center justify-center flex-1">
+                                <div class="card-icon">
+                                    <?php 
+                                    $icons = [
+                                        'Budgeting' => 'fas fa-wallet',
+                                        'Investing' => 'fas fa-chart-line',
+                                        'Savings' => 'fas fa-piggy-bank',
+                                        'Credit' => 'fas fa-credit-card',
+                                        'Insurance' => 'fas fa-shield-alt',
+                                        'Taxes' => 'fas fa-calculator'
+                                    ];
+                                    $icon = $icons[$quiz['category']] ?? 'fas fa-brain';
+                                    ?>
+                                    <i class="<?php echo $icon; ?>"></i>
+                                </div>
+                                <h3 class="card-title"><?php echo htmlspecialchars($quiz['title']); ?></h3>
+                                <p class="card-description">Master essential financial concepts and earn rewards while learning</p>
+                            </div>
+                            
+                            <div class="start-button">
+                                <i class="fas fa-play mr-2"></i>
+                                Start Quiz
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
+                
+                <!-- Stats Section -->
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center p-6 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-2xl border border-indigo-500/20">
+                        <div class="text-3xl font-bold text-indigo-400 mb-2">
+                            <i class="fas fa-trophy mr-2"></i>
+                            <?php echo count($quizzes); ?>
+                        </div>
+                        <div class="text-gray-300">Available Quizzes</div>
+                    </div>
+                    <div class="text-center p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl border border-green-500/20">
+                        <div class="text-3xl font-bold text-green-400 mb-2">
+                            <i class="fas fa-coins mr-2"></i>
+                            <?php echo number_format($points); ?>
+                        </div>
+                        <div class="text-gray-300">Your Points</div>
+                    </div>
+                    <div class="text-center p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl border border-purple-500/20">
+                        <div class="text-3xl font-bold text-purple-400 mb-2">
+                            <i class="fas fa-dollar-sign mr-2"></i>
+                            <?php echo number_format($wallet_balance, 2); ?>
+                        </div>
+                        <div class="text-gray-300">Wallet Balance</div>
+                    </div>
+                </div>
             </div>
             
             <!-- Quiz Questions -->
-            <div id="quiz-questions" class="quiz-card" style="display: none;" data-aos="fade-up" data-aos-delay="300">
+            <div id="quiz-questions" class="quiz-main-container" style="display: none;" data-aos="fade-up" data-aos-delay="300">
                 <div class="flex justify-between items-center mb-6">
                     <h2 id="quiz-title" class="text-3xl font-bold gradient-text"></h2>
                     <span id="question-counter" class="bg-indigo-500/20 px-4 py-2 rounded-full text-indigo-300 font-semibold"></span>
@@ -1080,14 +1435,340 @@ try {
                 updateProgress();
             });
             
-            // GSAP Animations
-            gsap.from('.quiz-card', {
+            // Advanced GSAP Animations
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Main container entrance animation
+            gsap.from('.quiz-main-container', {
+                duration: 1.2,
+                y: 80,
+                opacity: 0,
+                scale: 0.95,
+                ease: 'power3.out',
+                delay: 0.3
+            });
+            
+            // Quiz cards staggered animation
+            gsap.from('.quiz-selection-card', {
                 duration: 1,
+                y: 100,
+                opacity: 0,
+                scale: 0.8,
+                rotation: 5,
+                stagger: {
+                    amount: 0.6,
+                    from: "start"
+                },
+                ease: 'back.out(1.7)',
+                delay: 0.8
+            });
+            
+            // Stats cards animation
+            gsap.from('.quiz-main-container .grid > div', {
+                duration: 0.8,
                 y: 50,
                 opacity: 0,
-                stagger: 0.2,
-                ease: 'power3.out'
+                stagger: 0.1,
+                ease: 'power2.out',
+                delay: 1.5
             });
+            
+            // Floating animation for icons
+            gsap.to('.floating-element', {
+                y: -10,
+                duration: 2,
+                ease: 'power1.inOut',
+                yoyo: true,
+                repeat: -1
+            });
+            
+            // Enhanced hover effects for quiz cards
+            $('.quiz-selection-card').each(function(index) {
+                const card = this;
+                const icon = $(card).find('.card-icon i')[0];
+                const title = $(card).find('.card-title')[0];
+                const button = $(card).find('.start-button')[0];
+                
+                $(card).hover(
+                    function() {
+                        // Hover in
+                        gsap.to(card, {
+                            duration: 0.4,
+                            y: -15,
+                            scale: 1.03,
+                            ease: 'power2.out'
+                        });
+                        
+                        gsap.to(icon, {
+                            duration: 0.6,
+                            scale: 1.2,
+                            rotationY: 180,
+                            ease: 'back.out(1.7)'
+                        });
+                        
+                        gsap.to(title, {
+                            duration: 0.3,
+                            color: '#8b5cf6',
+                            ease: 'power2.out'
+                        });
+                        
+                        gsap.to(button, {
+                            duration: 0.3,
+                            scale: 1.05,
+                            ease: 'power2.out'
+                        });
+                    },
+                    function() {
+                        // Hover out
+                        gsap.to(card, {
+                            duration: 0.4,
+                            y: 0,
+                            scale: 1,
+                            ease: 'power2.out'
+                        });
+                        
+                        gsap.to(icon, {
+                            duration: 0.6,
+                            scale: 1,
+                            rotationY: 0,
+                            ease: 'back.out(1.7)'
+                        });
+                        
+                        gsap.to(title, {
+                            duration: 0.3,
+                            color: '#f8fafc',
+                            ease: 'power2.out'
+                        });
+                        
+                        gsap.to(button, {
+                            duration: 0.3,
+                            scale: 1,
+                            ease: 'power2.out'
+                        });
+                    }
+                );
+                
+                // Click animation
+                $(card).on('click', function() {
+                    gsap.to(card, {
+                        duration: 0.1,
+                        scale: 0.98,
+                        ease: 'power2.out',
+                        yoyo: true,
+                        repeat: 1
+                    });
+                });
+            });
+            
+            // Particle effect on hover
+            $('.quiz-selection-card').hover(function() {
+                createParticles(this);
+            });
+            
+            function createParticles(element) {
+                const rect = element.getBoundingClientRect();
+                const particleCount = 5;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = $('<div class="particle"></div>').css({
+                        position: 'fixed',
+                        width: '4px',
+                        height: '4px',
+                        background: 'linear-gradient(45deg, #6366f1, #8b5cf6)',
+                        borderRadius: '50%',
+                        pointerEvents: 'none',
+                        zIndex: 1000,
+                        left: rect.left + Math.random() * rect.width,
+                        top: rect.top + Math.random() * rect.height
+                    });
+                    
+                    $('body').append(particle);
+                    
+                    gsap.to(particle[0], {
+                        duration: 1.5,
+                        y: -50,
+                        x: (Math.random() - 0.5) * 100,
+                        opacity: 0,
+                        scale: 0,
+                        ease: 'power2.out',
+                        onComplete: () => particle.remove()
+                    });
+                }
+            }
+            
+            // Enhanced loadQuiz function with animations
+            window.loadQuiz = function(quizId) {
+                // Show loading state
+                const clickedCard = event.currentTarget;
+                const originalContent = $(clickedCard).html();
+                
+                $(clickedCard).html(`
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <div class="loading-spinner mb-4"></div>
+                        <div class="text-indigo-300">Loading Quiz...</div>
+                    </div>
+                `);
+                
+                // Animate other cards out
+                $('.quiz-selection-card').not(clickedCard).each(function(index) {
+                    gsap.to(this, {
+                        duration: 0.5,
+                        opacity: 0.3,
+                        scale: 0.95,
+                        delay: index * 0.05,
+                        ease: 'power2.out'
+                    });
+                });
+                
+                // Simulate loading and load quiz
+                setTimeout(() => {
+                    $.ajax({
+                        url: 'quiz.php',
+                        type: 'GET',
+                        data: { quiz_id: quizId },
+                        success: function(response) {
+                            // Hide quiz selection
+                            gsap.to('.quiz-main-container', {
+                                duration: 0.6,
+                                y: -50,
+                                opacity: 0,
+                                ease: 'power2.inOut',
+                                onComplete: function() {
+                                    $('.quiz-main-container').first().hide();
+                                    
+                                    // Load and show quiz questions
+                                    $('#quiz-questions').show();
+                                    gsap.fromTo('#quiz-questions', 
+                                        { y: 50, opacity: 0 },
+                                        { duration: 0.8, y: 0, opacity: 1, ease: 'power2.out' }
+                                    );
+                                }
+                            });
+                        },
+                        error: function() {
+                            // Restore original content on error
+                            $(clickedCard).html(originalContent);
+                            $('.quiz-selection-card').css({ opacity: 1, transform: 'scale(1)' });
+                        }
+                    });
+                }, 1000);
+            };
+            
+            // Add tooltips to quiz cards
+            $('.quiz-selection-card').each(function() {
+                const card = $(this);
+                const category = card.find('.category-badge').text();
+                const title = card.find('.card-title').text();
+                
+                const tooltip = $(`
+                    <div class="tooltip">
+                        <strong>${title}</strong><br>
+                        Category: ${category}<br>
+                        <em>Click to start learning!</em>
+                    </div>
+                `);
+                
+                $('body').append(tooltip);
+                
+                card.hover(
+                    function(e) {
+                        const rect = this.getBoundingClientRect();
+                        tooltip.css({
+                            left: rect.left + rect.width / 2 - tooltip.outerWidth() / 2,
+                            top: rect.top - tooltip.outerHeight() - 10
+                        }).addClass('show');
+                    },
+                    function() {
+                        tooltip.removeClass('show');
+                    }
+                );
+            });
+            
+            // Add sound effects (optional - requires audio files)
+            function playSound(type) {
+                // You can add actual audio files here
+                // const audio = new Audio(`sounds/${type}.mp3`);
+                // audio.play().catch(() => {}); // Ignore errors if audio fails
+            }
+            
+            // Enhanced click feedback
+            $('.quiz-selection-card').on('click', function() {
+                playSound('click');
+                
+                // Create ripple effect
+                const ripple = $('<div class="ripple"></div>').css({
+                    position: 'absolute',
+                    borderRadius: '50%',
+                    background: 'rgba(99, 102, 241, 0.3)',
+                    pointerEvents: 'none',
+                    transform: 'scale(0)',
+                    animation: 'ripple-effect 0.6s linear'
+                });
+                
+                $(this).append(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+            
+            // Add CSS for ripple effect
+            $('<style>').text(`
+                @keyframes ripple-effect {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+                .ripple {
+                    width: 20px;
+                    height: 20px;
+                    left: 50%;
+                    top: 50%;
+                    margin-left: -10px;
+                    margin-top: -10px;
+                }
+            `).appendTo('head');
+            
+            // Add keyboard navigation
+            let currentCardIndex = 0;
+            const cards = $('.quiz-selection-card');
+            
+            $(document).keydown(function(e) {
+                if (cards.length === 0) return;
+                
+                switch(e.which) {
+                    case 37: // left arrow
+                        currentCardIndex = Math.max(0, currentCardIndex - 1);
+                        break;
+                    case 39: // right arrow
+                        currentCardIndex = Math.min(cards.length - 1, currentCardIndex + 1);
+                        break;
+                    case 13: // enter
+                        cards.eq(currentCardIndex).click();
+                        return;
+                    default:
+                        return;
+                }
+                
+                // Update focus styles
+                cards.removeClass('keyboard-focus');
+                cards.eq(currentCardIndex).addClass('keyboard-focus');
+                
+                // Smooth scroll to focused card
+                cards.eq(currentCardIndex)[0].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+                
+                e.preventDefault();
+            });
+            
+            // Add CSS for keyboard focus
+            $('<style>').text(`
+                .keyboard-focus {
+                    outline: 2px solid #6366f1 !important;
+                    outline-offset: 4px !important;
+                }
+            `).appendTo('head');
         });
     </script>
     <script src="public/js/cursor.js"></script>
