@@ -864,7 +864,6 @@ try {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Initialize particles.js
         document.addEventListener('DOMContentLoaded', function() {
@@ -1274,62 +1273,7 @@ try {
             });
         }
         
-        // Stock chart initialization
-        function initStockChart() {
-            const stockSelector = document.getElementById('stock-selector');
-            let selectedStock = stockSelector.value;
-            let stockChart;
-            
-            // Function to fetch stock data and update chart
-            function fetchStockData(symbol) {
-                // This would normally fetch from an API
-                // For demo purposes, we'll generate random data
-                const data = generateRandomStockData(symbol);
-                updateStockChart(data);
-            }
-            
-            // Function to generate random stock data
-            function generateRandomStockData(symbol) {
-                const data = [];
-                let price = 100 + Math.random() * 100;
-                
-                for (let i = 30; i >= 0; i--) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - i);
-                    
-                    const change = (Math.random() - 0.5) * 5;
-                    price += change;
-                    
-                    const open = price;
-                    const close = price + (Math.random() - 0.5) * 2;
-                    const high = Math.max(open, close) + Math.random() * 2;
-                    const low = Math.min(open, close) - Math.random() * 2;
-                    
-                    data.push({
-                        date: date.toISOString().split('T')[0],
-                        open: open,
-                        high: high,
-                        low: low,
-                        close: close,
-                        volume: Math.floor(Math.random() * 1000000) + 500000
-                    });
-                }
-                
-                return {
-                    symbol: symbol,
-                    data: data
-                };
-            }
-            
-            // Initial fetch
-            fetchStockData(selectedStock);
-            
-            // Handle stock selection change
-            stockSelector.addEventListener('change', function() {
-                selectedStock = this.value;
-                fetchStockData(selectedStock);
-            });
-        }
+        // Duplicate initStockChart removed (using API-backed version above)
         
         function openTradeModal(action, symbol, price) {
             $('#tradeAction').val(action);
@@ -1346,7 +1290,9 @@ try {
             $('#quantity-range').val(1);
             $('#totalCost').val('$' + price.toFixed(2));
             
-            $('#tradeModal').modal('show');
+            var tradeModalEl = document.getElementById('tradeModal');
+            var tradeModal = new bootstrap.Modal(tradeModalEl);
+            tradeModal.show();
         }
         
         $(document).ready(function() {
