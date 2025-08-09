@@ -1281,8 +1281,7 @@ try {
             $('#tradePrice').val(price);
             $('#tradeSymbolDisplay').val(symbol);
             $('#tradePriceDisplay').val('$' + price.toFixed(2));
-            $('#tradeModalTitle').text(action.charAt(0).toUpperCase() + action.slice(1) + ' ' + symbol);
-            $('#tradeSubmitBtn').text(action.charAt(0).toUpperCase() + action.slice(1));
+            // Keep static modal title "Trade Stock"
             $('#tradeSubmitBtn').removeClass('btn-primary btn-success btn-danger').addClass(action === 'buy' ? 'btn-success' : 'btn-danger');
             
             // Reset quantity
