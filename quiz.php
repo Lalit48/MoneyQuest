@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_quiz'])) {
 // Get available quizzes
 try {
     $conn = getConnection();
-    $stmt = $conn->prepare("SELECT quiz_id, title, category FROM quizzes ORDER BY category, title");
+    $stmt = $conn->prepare("SELECT quiz_id, title, category, description, difficulty FROM quizzes ORDER BY difficulty, category, title");
     $stmt->execute();
     $quizzes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
@@ -378,16 +378,17 @@ try {
         .quiz-selection-card {
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 2rem;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
             height: 100%;
+            min-height: 400px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             text-align: center;
             cursor: pointer;
             backdrop-filter: blur(10px);
@@ -395,9 +396,27 @@ try {
         }
         
         .quiz-selection-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(99, 102, 241, 0.5);
-            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.6), 0 0 20px rgba(99, 102, 241, 0.4);
+            border-color: rgba(99, 102, 241, 0.6);
+            background: rgba(15, 23, 42, 0.8);
+        }
+        
+        .quiz-selection-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(236, 72, 153, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            border-radius: 20px;
+        }
+        
+        .quiz-selection-card:hover::before {
+            opacity: 1;
         }
         
         .question-card {
@@ -710,20 +729,73 @@ try {
                     <span class="gradient-text">Select a Quiz</span>
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <?php foreach ($quizzes as $index => $quiz): ?>
-                        <div class="quiz-selection-card" onclick="loadQuiz(<?php echo $quiz['quiz_id']; ?>)" data-aos="fade-up" data-aos-delay="<?php echo 150 + ($index * 50); ?>">
-                            <?php if ($index < 2): ?>
+                    <?php 
+                    $categoryIcons = [
+                        'Budgeting' => 'fas fa-calculator',
+                        'Investing' => 'fas fa-chart-line',
+                        'Saving' => 'fas fa-piggy-bank',
+                        'Credit' => 'fas fa-credit-card',
+                        'Insurance' => 'fas fa-shield-alt',
+                        'Taxes' => 'fas fa-file-invoice-dollar',
+                        'Retirement' => 'fas fa-clock',
+                        'Real Estate' => 'fas fa-home',
+                        'Cryptocurrency' => 'fab fa-bitcoin',
+                        'Banking' => 'fas fa-university'
+                    ];
+                    
+                    $difficultyColors = [
+                        'Beginner' => 'bg-green-500/20 text-green-300 border-green-500/30',
+                        'Intermediate' => 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+                        'Advanced' => 'bg-red-500/20 text-red-300 border-red-500/30'
+                    ];
+                    
+                    foreach ($quizzes as $index => $quiz): 
+                        $icon = $categoryIcons[$quiz['category']] ?? 'fas fa-brain';
+                        $difficultyClass = $difficultyColors[$quiz['difficulty']] ?? 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+                    ?>
+                        <div class="quiz-selection-card group" onclick="loadQuiz(<?php echo $quiz['quiz_id']; ?>)" data-aos="fade-up" data-aos-delay="<?php echo 150 + ($index * 50); ?>">
+                            <!-- New Badge for first 3 quizzes -->
+                            <?php if ($index < 3): ?>
                                 <span class="quiz-badge">NEW</span>
                             <?php endif; ?>
-                            <div class="text-4xl mb-4 text-indigo-400">
-                                <i class="fas fa-brain"></i>
+                            
+                            <!-- Difficulty Badge -->
+                            <div class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold border <?php echo $difficultyClass; ?>">
+                                <?php echo strtoupper($quiz['difficulty']); ?>
                             </div>
-                            <span class="category-badge"><?php echo htmlspecialchars($quiz['category']); ?></span>
-                            <h3 class="text-xl font-bold mb-3"><?php echo htmlspecialchars($quiz['title']); ?></h3>
-                            <p class="text-gray-300 mb-4">Test your knowledge and earn rewards</p>
-                            <div class="bg-indigo-500/20 px-4 py-2 rounded-full text-sm font-medium text-indigo-300">
-                                <i class="fas fa-play mr-1"></i> Start Quiz
+                            
+                            <!-- Quiz Icon -->
+                            <div class="text-5xl mb-6 mt-8 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                                <i class="<?php echo $icon; ?> text-indigo-400 group-hover:text-indigo-300"></i>
                             </div>
+                            
+                            <!-- Category Badge -->
+                            <span class="category-badge mb-3"><?php echo htmlspecialchars($quiz['category']); ?></span>
+                            
+                            <!-- Quiz Title -->
+                            <h3 class="text-xl font-bold mb-4 group-hover:text-white transition-colors duration-300">
+                                <?php echo htmlspecialchars($quiz['title']); ?>
+                            </h3>
+                            
+                            <!-- Quiz Description -->
+                            <p class="text-gray-300 mb-6 text-sm leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
+                                <?php echo htmlspecialchars($quiz['description'] ?? 'Test your knowledge and earn rewards'); ?>
+                            </p>
+                            
+                            <!-- Quiz Stats -->
+                            <div class="flex justify-between items-center mb-4 text-xs text-gray-400">
+                                <span><i class="fas fa-question-circle mr-1"></i> 3 Questions</span>
+                                <span><i class="fas fa-clock mr-1"></i> 5 mins</span>
+                                <span><i class="fas fa-star mr-1"></i> +50 Points</span>
+                            </div>
+                            
+                            <!-- Start Button -->
+                            <div class="bg-indigo-500/20 hover:bg-indigo-500/30 px-4 py-3 rounded-full text-sm font-medium text-indigo-300 hover:text-indigo-200 transition-all duration-300 border border-indigo-500/30 hover:border-indigo-500/50">
+                                <i class="fas fa-play mr-2"></i> Start Quiz
+                            </div>
+                            
+                            <!-- Hover Effect Overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"></div>
                         </div>
                     <?php endforeach; ?>
                 </div>
