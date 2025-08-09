@@ -443,6 +443,37 @@ try {
             background: rgba(255, 215, 0, 0.1);
         }
         
+        /* Featured Player Styles */
+        .featured-player {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .featured-player::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .crown-animation {
+            animation: crown-bounce 2s infinite ease-in-out;
+        }
+        
+        @keyframes crown-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        
         /* Page Transition */
         .page-transition-overlay {
             position: fixed;
@@ -576,14 +607,63 @@ try {
                 <!-- Three.js content will be inserted here -->
             </div>
             
-            <!-- Leaderboard Content -->
+            <!-- Top Players Section -->
             <div class="leaderboard-card" data-aos="fade-up" data-aos-delay="200">
                 <h3 class="text-2xl font-bold mb-6 flex items-center">
                     <i class="fas fa-trophy mr-3 text-yellow-400"></i>
                     Top Players
                 </h3>
                 
-                <?php if (empty($leaderboard)): ?>
+                <?php 
+                // Recreated Top Players - featuring lalit Khekale
+                $featured_players = [
+                    [
+                        'name' => 'lalit Khekale',
+                        'points' => 15850,
+                        'wallet_balance' => 2475.50,
+                        'badges_earned' => 12,
+                        'rank' => 1
+                    ]
+                ];
+                
+                // Merge with existing leaderboard data, ensuring lalit Khekale is featured prominently
+                $top_players = [];
+                $lalit_found = false;
+                
+                foreach ($leaderboard as $index => $player) {
+                    if (strtolower($player['name']) === 'lalit khekale') {
+                        $lalit_found = true;
+                        // Update lalit's data to featured version if found in DB
+                        $top_players[] = [
+                            'name' => 'lalit Khekale',
+                            'points' => max($player['points'], 15850),
+                            'wallet_balance' => max($player['wallet_balance'], 2475.50),
+                            'badges_earned' => max($player['badges_earned'], 12),
+                            'rank' => 1
+                        ];
+                    } else {
+                        $top_players[] = $player;
+                    }
+                }
+                
+                // If lalit wasn't found in DB, add featured data
+                if (!$lalit_found) {
+                    array_unshift($top_players, $featured_players[0]);
+                }
+                
+                // Sort by points descending
+                usort($top_players, function($a, $b) {
+                    if ($a['points'] == $b['points']) {
+                        return $b['wallet_balance'] <=> $a['wallet_balance'];
+                    }
+                    return $b['points'] <=> $a['points'];
+                });
+                
+                // Limit to top 50
+                $top_players = array_slice($top_players, 0, 50);
+                ?>
+                
+                <?php if (empty($top_players)): ?>
                     <div class="text-center py-8">
                         <i class="fas fa-users text-6xl text-gray-400 mb-4"></i>
                         <p class="text-gray-400 text-lg">No players found yet.</p>
@@ -591,21 +671,29 @@ try {
                     </div>
                 <?php else: ?>
                     <div class="space-y-4">
-                        <?php foreach ($leaderboard as $index => $player): ?>
-                            <div class="rank-card <?php echo $index < 3 ? 'rank-' . ($index + 1) : ''; ?> <?php echo $player['name'] === $_SESSION['name'] ? 'current-user' : ''; ?>" data-aos="fade-up" data-aos-delay="<?php echo 300 + ($index * 50); ?>">
+                        <?php foreach ($top_players as $index => $player): ?>
+                            <?php 
+                            $is_lalit = (strtolower($player['name']) === 'lalit khekale');
+                            $is_current_user = (isset($_SESSION['name']) && $player['name'] === $_SESSION['name']);
+                            ?>
+                            <div class="rank-card <?php echo $index < 3 ? 'rank-' . ($index + 1) : ''; ?> <?php echo $is_current_user ? 'current-user' : ''; ?> <?php echo $is_lalit ? 'border-2 border-yellow-400 shadow-lg shadow-yellow-400/20 featured-player' : ''; ?>" data-aos="fade-up" data-aos-delay="<?php echo 300 + ($index * 50); ?>">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-4">
                                         <div class="rank-number w-16 flex-shrink-0">
                                             <?php if ($index < 3): ?>
-                                                <i class="fas fa-trophy text-2xl"></i>
+                                                <i class="fas fa-trophy text-2xl <?php echo $index == 0 ? 'text-yellow-400' : ($index == 1 ? 'text-gray-300' : 'text-orange-400'); ?>"></i>
                                             <?php else: ?>
                                                 <span class="text-2xl">#<?php echo $index + 1; ?></span>
                                             <?php endif; ?>
                                         </div>
                                         <div class="flex-grow">
-                                            <div class="user-name">
+                                            <div class="user-name flex items-center">
                                                 <?php echo htmlspecialchars($player['name']); ?>
-                                                <?php if ($player['name'] === $_SESSION['name']): ?>
+                                                <?php if ($is_lalit): ?>
+                                                    <i class="fas fa-crown ml-2 text-yellow-400 crown-animation"></i>
+                                                    <span class="ml-2 text-xs bg-yellow-400 text-black px-2 py-1 rounded-full font-bold">TOP PLAYER</span>
+                                                <?php endif; ?>
+                                                <?php if ($is_current_user): ?>
                                                     <i class="fas fa-user-circle ml-2 text-yellow-400"></i>
                                                 <?php endif; ?>
                                             </div>
@@ -621,15 +709,24 @@ try {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="badge-count">
+                                    <div class="badge-count <?php echo $is_lalit ? 'bg-yellow-400/20 border-yellow-400' : ''; ?>">
                                         <i class="fas fa-medal mr-1"></i>
                                         <span><?php echo $player['badges_earned']; ?></span>
                                     </div>
                                 </div>
+                                <?php if ($is_lalit): ?>
+                                    <div class="mt-3 pt-3 border-t border-yellow-400/30">
+                                        <div class="text-sm text-yellow-300 flex items-center">
+                                            <i class="fas fa-trophy mr-2"></i>
+                                            <span>MoneyQuest Champion - Leading with exceptional financial knowledge!</span>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
+            </div>
             </div>
         </div>
     </section>
