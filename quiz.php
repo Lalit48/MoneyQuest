@@ -1024,12 +1024,30 @@ try {
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <?php foreach ($quizzes as $index => $quiz): ?>
-                        <div class="quiz-selection-card" onclick="loadQuiz(<?php echo $quiz['quiz_id']; ?>)" data-aos="zoom-in" data-aos-delay="<?php echo 200 + ($index * 100); ?>">
-                            <?php if ($index < 2): ?>
+                    <?php 
+                    // Define quiz data with specific order and NEW badges
+                    $quiz_display_order = [
+                        ['title' => 'Budgeting Basics', 'category' => 'Budgeting', 'is_new' => true],
+                        ['title' => 'Investment Fundamentals', 'category' => 'Investing', 'is_new' => true],
+                        ['title' => 'Smart Saving Strategies', 'category' => 'Saving', 'is_new' => false]
+                    ];
+                    
+                    foreach ($quiz_display_order as $index => $display_quiz):
+                        // Find matching quiz from database
+                        $current_quiz = null;
+                        foreach ($quizzes as $quiz) {
+                            if ($quiz['title'] === $display_quiz['title']) {
+                                $current_quiz = $quiz;
+                                break;
+                            }
+                        }
+                        if (!$current_quiz) continue;
+                    ?>
+                        <div class="quiz-selection-card" onclick="loadQuiz(<?php echo $current_quiz['quiz_id']; ?>)" data-aos="zoom-in" data-aos-delay="<?php echo 200 + ($index * 100); ?>">
+                            <?php if ($display_quiz['is_new']): ?>
                                 <span class="quiz-badge">NEW</span>
                             <?php endif; ?>
-                            <span class="category-badge"><?php echo htmlspecialchars($quiz['category']); ?></span>
+                            <span class="category-badge"><?php echo htmlspecialchars($current_quiz['category']); ?></span>
                             
                             <div class="flex flex-col items-center justify-center flex-1">
                                 <div class="card-icon">
@@ -1037,16 +1055,16 @@ try {
                                     $icons = [
                                         'Budgeting' => 'fas fa-wallet',
                                         'Investing' => 'fas fa-chart-line',
-                                        'Savings' => 'fas fa-piggy-bank',
+                                        'Saving' => 'fas fa-piggy-bank',
                                         'Credit' => 'fas fa-credit-card',
                                         'Insurance' => 'fas fa-shield-alt',
                                         'Taxes' => 'fas fa-calculator'
                                     ];
-                                    $icon = $icons[$quiz['category']] ?? 'fas fa-brain';
+                                    $icon = $icons[$current_quiz['category']] ?? 'fas fa-brain';
                                     ?>
                                     <i class="<?php echo $icon; ?>"></i>
                                 </div>
-                                <h3 class="card-title"><?php echo htmlspecialchars($quiz['title']); ?></h3>
+                                <h3 class="card-title"><?php echo htmlspecialchars($current_quiz['title']); ?></h3>
                                 <p class="card-description">Master essential financial concepts and earn rewards while learning</p>
                             </div>
                             
@@ -1063,14 +1081,14 @@ try {
                     <div class="text-center p-6 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-2xl border border-indigo-500/20">
                         <div class="text-3xl font-bold text-indigo-400 mb-2">
                             <i class="fas fa-trophy mr-2"></i>
-                            <?php echo count($quizzes); ?>
+                            3
                         </div>
                         <div class="text-gray-300">Available Quizzes</div>
                     </div>
                     <div class="text-center p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl border border-green-500/20">
                         <div class="text-3xl font-bold text-green-400 mb-2">
                             <i class="fas fa-coins mr-2"></i>
-                            <?php echo number_format($points); ?>
+                            2,000
                         </div>
                         <div class="text-gray-300">Your Points</div>
                     </div>
