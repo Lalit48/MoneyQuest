@@ -12,7 +12,7 @@ from datetime import datetime
 import logging
 
 # Configuration
-ALPHA_VANTAGE_API_KEY = "PKRXM1YIUV4LPGXS"  # Actual Alpha Vantage API key
+ALPHA_VANTAGE_API_KEY = "your_api_key_here"  # Actual Alpha Vantage API key
 DB_CONFIG = {
     'host': 'localhost',
     'user': 'root',
@@ -167,4 +167,5 @@ def main():
             logging.info("Database connection closed")
 
 if __name__ == "__main__":
+
     main()
