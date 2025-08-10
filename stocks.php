@@ -686,7 +686,7 @@ try {
                 </div>
             <?php else: ?>
                 <div class="overflow-x-auto">
-                    <table class="w-full">
+                    <table class="w-full text-white">
                         <thead>
                             <tr class="text-left border-b border-gray-700">
                                 <th class="pb-3">Stock</th>
@@ -708,7 +708,7 @@ try {
                                             </div>
                                             <div>
                                                 <div class="font-bold"><?php echo htmlspecialchars($item['stock_symbol']); ?></div>
-                                                <div class="text-sm text-gray-400"><?php echo htmlspecialchars($item['name']); ?></div>
+                                                <div class="text-sm text-white"><?php echo htmlspecialchars($item['name']); ?></div>
                                             </div>
                                         </div>
                                     </td>
